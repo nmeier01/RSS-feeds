@@ -41,7 +41,7 @@ elif "description" in latest and "<img" in latest.description:
 
 # Only post if it's new
 if link != last_posted_link:
-    post_text = f"📢 New Lab Update: {title}\n{link}"
+    post_text = f"Lab Update: {title}\n{link}"
 
     if image_url:
         # Download the image
@@ -62,6 +62,7 @@ if link != last_posted_link:
     with open(last_posted_file, "w") as f:
         f.write(link)
 
-    print("✅ Posted to Bluesky (with image if available)!")
+    print("Posted to Bluesky (with image if available)!")
 else:
-    print("No new post. Skipping.")
+    print("No new post")
+
