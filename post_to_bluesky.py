@@ -47,7 +47,7 @@ if link != last_posted_link:
         # Download the image
         img_data = requests.get(image_url).content
         # Upload to Bluesky
-        upload = client.upload_blob(img_data, content_type="image/jpeg")
+        upload = client.upload_blob(img_data)
         embed = models.AppBskyEmbedImages.Main(
             images=[models.AppBskyEmbedImages.Image(
                 image=upload.blob,
@@ -65,4 +65,5 @@ if link != last_posted_link:
     print("Posted to Bluesky (with image if available)!")
 else:
     print("No new post")
+
 
