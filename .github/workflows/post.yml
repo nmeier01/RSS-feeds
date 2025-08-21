@@ -1,7 +1,7 @@
 name: Post to Bluesky
 
 on:
-  #schedule:
+  schedule:
     - cron: '0 * * * *'  # Runs every hour
   workflow_dispatch:  # Allow manual triggering
 
