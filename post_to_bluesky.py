@@ -2,17 +2,22 @@ import os
 import requests
 import feedparser
 from atproto import Client, models
+from bs4 install BeautifulSoup
+import html
 
-# Environment variables
+# github secrets
 RSS_FEED_URL = os.getenv("RSS_FEED_URL")
 BSKY_HANDLE = os.getenv("BSKY_HANDLE")
 BSKY_APP_PASSWORD = os.getenv("BSKY_APP_PASSWORD")
 
-# Initialize Bluesky client
+def html_cleaner(html_chunk):
+    no_tags = BeautifulSoup(html_chunk,'html.parser')
+    text_to_post = no_tags.get_text()
+    return html.unescape(text_to_post).strip()
+    
 client = Client()
 client.login(BSKY_HANDLE, BSKY_APP_PASSWORD)
 
-# Parse RSS feed
 feed = feedparser.parse(RSS_FEED_URL)
 
 # Read last posted link
@@ -24,7 +29,7 @@ if os.path.exists(last_posted_file):
 
 # Get the newest item
 latest = feed.entries[0]
-title = latest.title
+title = html_cleaner(latest.title)
 link = latest.link
 
 # Try to extract image URL
@@ -65,5 +70,6 @@ if link != last_posted_link:
     print("Posted to Bluesky (with image if available)!")
 else:
     print("No new post")
+
 
 
