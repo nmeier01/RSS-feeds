@@ -74,32 +74,7 @@ elif "description" in latest and "<img" in latest.description:
 if link != last_posted_link:
     post_text = f"Lab Update: {title}\n{link}"
 
-#     if image_url:
-#         # Download the image
-#         img_data = requests.get(image_url).content
-#         # Upload to Bluesky
-#         upload = client.upload_blob(img_data)
-#         embed = models.AppBskyEmbedImages.Main(
-#             images=[models.AppBskyEmbedImages.Image(
-#                 image=upload.blob,
-#                 alt=f"Image from {title}"
-#             )]
-#         )
-#         client.send_post(text=post_text, embed=embed)
-#     else:
-#         # No image, text-only post
-#         client.send_post(post_text)
-
-#     with open(last_posted_file, "w") as f:
-#         f.write(link)
-
-#     print("Posted to Bluesky (with image if available)!")
-# else:
-#     print("No new post")
-
-
-
- image_urls = extract_images(latest)
+    image_urls = extract_images(latest)
 
 
     if image_urls:
@@ -127,6 +102,34 @@ if link != last_posted_link:
     print("Posted to Bluesky")
 else:
     print("No new post.")
+
+#     if image_url:
+#         # Download the image
+#         img_data = requests.get(image_url).content
+#         # Upload to Bluesky
+#         upload = client.upload_blob(img_data)
+#         embed = models.AppBskyEmbedImages.Main(
+#             images=[models.AppBskyEmbedImages.Image(
+#                 image=upload.blob,
+#                 alt=f"Image from {title}"
+#             )]
+#         )
+#         client.send_post(text=post_text, embed=embed)
+#     else:
+#         # No image, text-only post
+#         client.send_post(post_text)
+
+#     with open(last_posted_file, "w") as f:
+#         f.write(link)
+
+#     print("Posted to Bluesky (with image if available)!")
+# else:
+#     print("No new post")
+
+
+
+ 
+
 
 
 
