@@ -2,7 +2,7 @@ import os
 import requests
 import feedparser
 from atproto import Client, models
-from bs4 install BeautifulSoup
+from bs4 import BeautifulSoup
 import html
 import re
 
@@ -127,6 +127,7 @@ if link != last_posted_link:
     print("Posted to Bluesky")
 else:
     print("No new post.")
+
 
 
 
