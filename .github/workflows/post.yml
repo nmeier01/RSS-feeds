@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install feedparser atproto requests
+          pip install feedparser atproto requests beautifulsoup4
 
       - name: Run script
         env:
