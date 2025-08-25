@@ -69,9 +69,7 @@ elif "description" in latest and "<img" in latest.description:
     match = re.search(r'<img.*?src="(.*?)"', latest.description)
     if match:
         image_url = match.group(1)
-max_len = 300
-if len(post_text)>max_len:
-    post_text = post_text[:max_len-3]+"..."
+
 # Only post if it's new
 if link != last_posted_link:
     post_text = f"Update from Tumblr: {title}"
@@ -102,6 +100,11 @@ if link != last_posted_link:
         f.write(link)
 
     print("Posted to Bluesky")
+
+max_len = 300
+if len(post_text)>max_len:
+    post_text = post_text[:max_len-3]+"..."
+    
 else:
     print("No new post.")
 
@@ -131,6 +134,7 @@ else:
 
 
  
+
 
 
 
