@@ -49,7 +49,7 @@ if os.path.exists(last_posted_file):
         last_posted_link = f.read().strip()
 
 latest = feed.entries[0]
-title = html_cleaner(latest.title)
+title = latest.title
 link = latest.link
 post_text = f"Update from Tumblr: {title}\n{link}"
 
@@ -131,5 +131,6 @@ print(post_text)
     
 # else:
 #     print("No new post.")
+
 
 
