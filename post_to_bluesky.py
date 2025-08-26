@@ -63,8 +63,10 @@ image_urls = extract_images(latest)
 
 if link != last_posted_link:
     post_text = f"Tumblr Update: {title}"
-    if len(post_text)>300:
-        post_text = post_text[:298]+"…"
+
+    # Bluesky allows up to 300 chars
+    if len(post_text) > 300:
+        post_text = post_text[:297] + "..."
 
     embed = None
     if image_urls:
@@ -74,19 +76,30 @@ if link != last_posted_link:
                 response = requests.get(url)
                 response.raise_for_status()
                 upload = client.upload_blob(response.content)
-                images.append(models.AppBskyEmbedImages.Image(
-                    image=upload.blob,
-                    alt=f"Image from {title}"
-                ))
+                images.append(
+                    models.AppBskyEmbedImages.Image(
+                        image=upload.blob,
+                        alt=f"Image from {title}"
+                    )
+                )
             except Exception as e:
                 print(f"Failed to upload image {url}: {e}")
+
         if images:
             embed = models.AppBskyEmbedImages.Main(images=images)
-        
-    client.send_post(
-        text=post_text, 
-        embed=embed if image_urls else None,
-        facets = [])
+
+    # Construct full post record (no 100-char cutoff)
+    record = models.AppBskyFeedPost.Record(
+        text=post_text,
+        embed=embed,
+        created_at=client.get_current_time_iso()
+    )
+
+    client.com.atproto.repo.create_record(
+        repo=client.me.did,
+        collection="app.bsky.feed.post",
+        record=record
+    )
 
     with open(last_posted_file, "w") as f:
         f.write(link)
@@ -94,6 +107,7 @@ if link != last_posted_link:
     print("Posted to Bluesky")
 else:
     print("No new post")
+
 
 
 
