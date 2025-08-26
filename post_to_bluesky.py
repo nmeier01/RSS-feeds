@@ -98,7 +98,7 @@ if link != last_posted_link:
         models.ComAtprotoRepoCreateRecord.Data(
             repo=client.me.did,
             collection="app.bsky.feed.post",
-            data=record
+            data=record.model_dump()
     )
     )
 
@@ -108,5 +108,6 @@ if link != last_posted_link:
     print("Posted to Bluesky")
 else:
     print("No new post")
+
 
 
