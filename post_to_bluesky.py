@@ -97,7 +97,7 @@ if link != last_posted_link:
     client.com.atproto.repo.create_record(
         repo=client.me.did,
         collection="app.bsky.feed.post",
-        record=record
+        data=record
     )
 
     with open(last_posted_file, "w") as f:
@@ -106,3 +106,4 @@ if link != last_posted_link:
     print("Posted to Bluesky")
 else:
     print("No new post")
+
