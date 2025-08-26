@@ -52,12 +52,12 @@ link = latest.link
 post_text = f"Update from Tumblr: {title}\n{link}"
 
 
-# # Read last posted link
-# last_posted_file = "last_posted.txt"
-# last_posted_link = ""
-# if os.path.exists(last_posted_file):
-#     with open(last_posted_file, "r") as f:
-#         last_posted_link = f.read().strip()
+# Read last posted link
+last_posted_file = "last_posted.txt"
+last_posted_link = ""
+if os.path.exists(last_posted_file):
+    with open(last_posted_file, "r") as f:
+        last_posted_link = f.read().strip()
 
 
 # Try to extract image URL
@@ -107,6 +107,7 @@ if link != last_posted_link:
     
 else:
     print("No new post.")
+
 
 
 
