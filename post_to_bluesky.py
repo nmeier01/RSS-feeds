@@ -23,11 +23,11 @@ BSKY_APP_PASSWORD = os.getenv("BSKY_APP_PASSWORD")
 ############ TESTING #############
 feed = feedparser.parse(RSS_FEED_URL)   
 
-last_posted_file = "last_posted.txt"
-last_posted_link = ""
-if os.path.exists(last_posted_file):
-    with open(last_posted_file, "r") as f:
-        last_posted_link = f.read()
+# last_posted_file = "last_posted.txt"
+# last_posted_link = ""
+# if os.path.exists(last_posted_file):
+#     with open(last_posted_file, "r") as f:
+#         last_posted_link = f.read()
 
 latest = feed.entries[0]
 title = latest.title
@@ -131,6 +131,7 @@ print(post_text)
     
 # else:
 #     print("No new post.")
+
 
 
 
