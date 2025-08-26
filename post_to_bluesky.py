@@ -88,18 +88,16 @@ if link != last_posted_link:
             embed = models.AppBskyEmbedImages.Main(images=images)
 
     # Construct full post record (no 100-char cutoff)
-    record = models.AppBskyFeedPost.Record(
-        text=post_text,
-        embed=embed,
-        created_at=client.get_current_time_iso()
-    )
-
     client.com.atproto.repo.create_record(
         data=models.ComAtprotoRepoCreateRecord.Data(
             repo=client.me.did,
             collection="app.bsky.feed.post",
-            data=record.model_dump()
-    )
+            record=models.AppBskyFeedPost.Record(
+                text=post_text,
+                embed=embed,
+                created_at=client.get_current_time_iso()
+            ).model_dump()  # must be a dict
+        )
     )
 
     with open(last_posted_file, "w") as f:
@@ -108,6 +106,7 @@ if link != last_posted_link:
     print("Posted to Bluesky")
 else:
     print("No new post")
+
 
 
 
