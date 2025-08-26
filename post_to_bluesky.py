@@ -73,39 +73,42 @@ elif "description" in latest and "<img" in latest.description:
 # Only post if it's new
 if link != last_posted_link:
     post_text = f"Update from Tumblr: {title}\n{link}"
+
+print(post_text)
     
-    max_len = 300
-    if len(title)>max_len:
-        post_text = title[:max_len-3]+"…"
+    # max_len = 300
+    # if len(title)>max_len:
+    #     post_text = title[:max_len-3]+"…"
         
-    image_urls = extract_images(latest)
+    # image_urls = extract_images(latest)
 
 
-    if image_urls:
-        images = []
-        for url in image_urls:
-            try:
-                response = requests.get(url)
-                response.raise_for_status()
-                upload = client.upload_blob(response.content)
-                images.append(models.AppBskyEmbedImages.Image(
-                    image=upload.blob,
-                    alt=f"Image from {title}"
-                ))
-            except Exception as e:
-                print(f"Failed to upload image {url}: {e}")
+    # if image_urls:
+    #     images = []
+    #     for url in image_urls:
+    #         try:
+    #             response = requests.get(url)
+    #             response.raise_for_status()
+    #             upload = client.upload_blob(response.content)
+    #             images.append(models.AppBskyEmbedImages.Image(
+    #                 image=upload.blob,
+    #                 alt=f"Image from {title}"
+    #             ))
+    #         except Exception as e:
+    #             print(f"Failed to upload image {url}: {e}")
 
-        embed = models.AppBskyEmbedImages.Main(images=images)
-        client.send_post(text=post_text, embed=embed)
-    else:
-        client.send_post(post_text)
+    #     embed = models.AppBskyEmbedImages.Main(images=images)
+    #     client.send_post(text=post_text, embed=embed)
+    # else:
+    #     client.send_post(post_text)
 
-    with open(last_posted_file, "w") as f:
-        f.write(link)
+    # with open(last_posted_file, "w") as f:
+    #     f.write(link)
 
-    print("Posted to Bluesky")
+    # print("Posted to Bluesky")
 
 
     
 else:
     print("No new post.")
+
