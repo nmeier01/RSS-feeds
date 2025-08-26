@@ -27,7 +27,7 @@ def main():
 
 
     # Parse Tumblr RSS
-    feed = feedparser.parse(tumblr_rss)
+    feed = feedparser.parse(RSS_FEED_URL)
     latest = feed.entries[0]
 
     # Clean and prepare text
@@ -46,7 +46,7 @@ def main():
 
     # Login to Bluesky
     client = Client()
-    client.login(bsky_handle, bsky_password)
+    client.login(BSKY_HANDLE, BSKY_APP_PASSWORD)
 
     # If images exist, upload them
     if image_urls:
@@ -75,4 +75,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
