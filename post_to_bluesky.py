@@ -11,33 +11,14 @@ RSS_FEED_URL = os.getenv("RSS_FEED_URL")
 BSKY_HANDLE = os.getenv("BSKY_HANDLE")
 BSKY_APP_PASSWORD = os.getenv("BSKY_APP_PASSWORD")
 
-def html_cleaner(html_chunk):
-    no_tags = BeautifulSoup(html_chunk,'html.parser')
-    text_to_post = no_tags.get_text()
-    return html.unescape(text_to_post)
+# def html_cleaner(html_chunk):
+#     no_tags = BeautifulSoup(html_chunk,'html.parser')
+#     text_to_post = no_tags.get_text()
+#     return html.unescape(text_to_post)
 
 
 
-def extract_images(entry):
-    urls = []
 
-    # Method 1: media_content field
-    if "media_content" in entry:
-        urls.extend([m["url"] for m in entry.media_content])
-
-    # Method 2: <img> tags in description
-    if "description" in entry and "<img" in entry.description:
-        urls.extend(re.findall(r'<img.*?src="(.*?)"', entry.description))
-
-    # Deduplicate while keeping order
-    seen = set()
-    unique_urls = []
-    for url in urls:
-        if url not in seen:
-            seen.add(url)
-            unique_urls.append(url)
-
-    return unique_urls[:4]  # Bluesky max = 4
 
 ############ TESTING #############
 feed = feedparser.parse(RSS_FEED_URL)   
@@ -46,7 +27,7 @@ last_posted_file = "last_posted.txt"
 last_posted_link = ""
 if os.path.exists(last_posted_file):
     with open(last_posted_file, "r") as f:
-        last_posted_link = f.read().strip()
+        last_posted_link = f.read()
 
 latest = feed.entries[0]
 title = latest.title
@@ -59,7 +40,26 @@ print(post_text)
 
 
 
+# def extract_images(entry):
+#     urls = []
 
+#     # Method 1: media_content field
+#     if "media_content" in entry:
+#         urls.extend([m["url"] for m in entry.media_content])
+
+#     # Method 2: <img> tags in description
+#     if "description" in entry and "<img" in entry.description:
+#         urls.extend(re.findall(r'<img.*?src="(.*?)"', entry.description))
+
+#     # Deduplicate while keeping order
+#     seen = set()
+#     unique_urls = []
+#     for url in urls:
+#         if url not in seen:
+#             seen.add(url)
+#             unique_urls.append(url)
+
+#     return unique_urls[:4]  # Bluesky max = 4
     
 # client = Client()
 # client.login(BSKY_HANDLE, BSKY_APP_PASSWORD)
@@ -131,6 +131,7 @@ print(post_text)
     
 # else:
 #     print("No new post.")
+
 
 
 
