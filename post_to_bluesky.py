@@ -17,6 +17,28 @@ def html_cleaner(html_chunk):
     text_to_post = no_tags.get_text()
     return html.unescape(text_to_post).strip()
 
+# extract images function
+def extract_images(entry):
+    urls = []
+
+    # Method 1: media_content field
+    if "media_content" in entry:
+        urls.extend([m["url"] for m in entry.media_content])
+
+    # Method 2: <img> tags in description
+    if "description" in entry and "<img" in entry.description:
+        urls.extend(re.findall(r'<img.*?src="(.*?)"', entry.description))
+
+    # Deduplicate while keeping order
+    seen = set()
+    unique_urls = []
+    for url in urls:
+        if url not in seen:
+            seen.add(url)
+            unique_urls.append(url)
+
+    return unique_urls[:4]
+
 # Initialize Bluesky client
 client = Client()
 client.login(BSKY_HANDLE, BSKY_APP_PASSWORD)
@@ -67,3 +89,4 @@ if link != last_posted_link:
     print("Posted to Bluesky")
 else:
     print("No new post")
+
