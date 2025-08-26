@@ -13,11 +13,11 @@ BSKY_APP_PASSWORD = os.getenv("BSKY_APP_PASSWORD")
 
 # HTML cleaner function
 def html_cleaner(html_chunk):
-    no_tags = BeautifulSoup(html_chunk,'html.parser')
+    no_tags = BeautifulSoup(html_chunk, "html.parser")
     text_to_post = no_tags.get_text()
     return html.unescape(text_to_post).strip()
 
-# extract images function
+# Extract images function
 def extract_images(entry):
     urls = []
 
@@ -57,7 +57,6 @@ if os.path.exists(last_posted_file):
 latest = feed.entries[0]
 title = html_cleaner(latest.title)
 link = latest.link
-
 
 image_urls = extract_images(latest)
 
@@ -107,9 +106,3 @@ if link != last_posted_link:
     print("Posted to Bluesky")
 else:
     print("No new post")
-
-
-
-
-
-
