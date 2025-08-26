@@ -73,10 +73,6 @@ elif "description" in latest and "<img" in latest.description:
 # Only post if it's new
 if link != last_posted_link:
     post_text = f"Update from Tumblr: {title}"
-    
-    max_len = 300
-    if len(post_text)>max_len:
-        post_text = post_text[:max_len-1]+"…"
         
     image_urls = extract_images(latest)
 
@@ -136,6 +132,7 @@ else:
 
 
  
+
 
 
 
