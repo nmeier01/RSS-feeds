@@ -79,7 +79,9 @@ if link != last_posted_link:
                 print(f"Failed to upload image {url}: {e}")
 
         embed = models.AppBskyEmbedImages.Main(images=images)
-        client.send_post(text=post_text, embed=embed)
+        client.send_post(text=post_text, 
+                         embed=embed if image_urls else None
+                         facets = [])
     else:
         client.send_post(post_text)
 
@@ -89,4 +91,5 @@ if link != last_posted_link:
     print("Posted to Bluesky")
 else:
     print("No new post")
+
 
