@@ -14,7 +14,7 @@ BSKY_APP_PASSWORD = os.getenv("BSKY_APP_PASSWORD")
 def html_cleaner(html_chunk):
     no_tags = BeautifulSoup(html_chunk,'html.parser')
     text_to_post = no_tags.get_text()
-    return html.unescape(text_to_post).strip()
+    return html.unescape(text_to_post)
 
 
 
@@ -131,6 +131,7 @@ print(post_text)
     
 # else:
 #     print("No new post.")
+
 
 
 
