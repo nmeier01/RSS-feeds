@@ -21,9 +21,10 @@ def build_post_text(title: str) -> str:
 # ---- Main ----
 def main():
     # Load env vars
-    tumblr_rss = os.environ["TUMBLR_RSS"]
-    bsky_handle = os.environ["BSKY_HANDLE"]
-    bsky_password = os.environ["BSKY_PASSWORD"]
+    RSS_FEED_URL = os.getenv("RSS_FEED_URL")
+    BSKY_HANDLE = os.getenv("BSKY_HANDLE")
+    BSKY_APP_PASSWORD = os.getenv("BSKY_APP_PASSWORD")
+
 
     # Parse Tumblr RSS
     feed = feedparser.parse(tumblr_rss)
@@ -74,3 +75,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
