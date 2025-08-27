@@ -12,11 +12,13 @@ BSKY_HANDLE = os.getenv("BSKY_HANDLE")
 BSKY_APP_PASSWORD = os.getenv("BSKY_APP_PASSWORD")
 
 def html_cleaner(html_chunk):
-    no_tags = BeautifulSoup(html_chunk,'html.parser')
+    """Strip HTML and unescape entities"""
+    no_tags = BeautifulSoup(html_chunk, 'html.parser')
     text_to_post = no_tags.get_text()
     return html.unescape(text_to_post)
-    
+
 def extract_images(entry):
+    """Extract up to 4 unique image URLs from RSS entry"""
     urls = []
 
     # Method 1: media_content field
@@ -37,47 +39,36 @@ def extract_images(entry):
 
     return unique_urls[:4]  # Bluesky max = 4
 
+def get_already_posted_links(client, handle, limit=20):
+    #Fetch recent Bluesky posts and extract URLs
+    feed_response = client.get_author_feed(actor=handle, limit=limit)
+    already_posted_links = set()
 
+    for post in feed_response.feed:
+        record = post.post.record
+        if hasattr(record, "text") and isinstance(record.text, str):
+            matches = re.findall(r'https?://\S+', record.text)
+            already_posted_links.update(matches)
 
+    return already_posted_links
 
-############ TESTING #############
+############ main script #############
 feed = feedparser.parse(RSS_FEED_URL)   
 
 client = Client()
-client.login(BSKY_HANDLE,BSKY_APP_PASSWORD)
+client.login(BSKY_HANDLE, BSKY_APP_PASSWORD)
 
 latest = feed.entries[0]
 title = html_cleaner(latest.title)
 link = latest.link
-post_text = f"Update from Tumblr: {title}\n{link}"
 
+# Get recent Bluesky posts
+already_posted_links = get_already_posted_links(client, BSKY_HANDLE, limit=20)
 
-# Read last posted link
-last_posted_file = "last_posted.txt"
-last_posted_link = ""
-if os.path.exists(last_posted_file):
-    with open(last_posted_file, "r") as f:
-        last_posted_link = f.read().strip()
-
-
-# Try to extract image URL
-image_url = None
-if "media_content" in latest:
-    # Method 1
-    image_url = latest.media_content[0]["url"]
-elif "description" in latest and "<img" in latest.description:
-    # Method 2
-    import re
-    match = re.search(r'<img.*?src="(.*?)"', latest.description)
-    if match:
-        image_url = match.group(1)
-
-# Only post if it's new
-if link != last_posted_link:
+if link not in already_posted_links:
     post_text = f"Update from Tumblr: {title}\n{link}"
 
     image_urls = extract_images(latest)
-
 
     if image_urls:
         images = []
@@ -98,20 +89,6 @@ if link != last_posted_link:
     else:
         client.send_post(post_text)
 
-    with open(last_posted_file, "w") as f:
-        f.write(link)
-
     print("Posted to Bluesky")
-
-
-    
 else:
-    print("No new post.")
-
-
-
-
-
-
-
-
+    print("Already cross-posted.")
