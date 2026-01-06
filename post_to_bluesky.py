@@ -11,21 +11,19 @@ RSS_FEED_URL = os.getenv("RSS_FEED_URL")
 BSKY_HANDLE = os.getenv("BSKY_HANDLE")
 BSKY_APP_PASSWORD = os.getenv("BSKY_APP_PASSWORD")
 
+### clean HTML to be posted to bluesky 
 def html_cleaner(html_chunk):
-    """Strip HTML and unescape entities"""
     no_tags = BeautifulSoup(html_chunk, 'html.parser')
     text_to_post = no_tags.get_text()
     return html.unescape(text_to_post)
 
+### get images from bluesky post, only works for up to 4 images
 def extract_images(entry):
-    """Extract up to 4 unique image URLs from RSS entry"""
     urls = []
 
-    # Method 1: media_content field
     if "media_content" in entry:
         urls.extend([m["url"] for m in entry.media_content])
 
-    # Method 2: <img> tags in description
     if "description" in entry and "<img" in entry.description:
         urls.extend(re.findall(r'<img.*?src="(.*?)"', entry.description))
 
@@ -39,8 +37,9 @@ def extract_images(entry):
 
     return unique_urls[:4]  # Bluesky max = 4
 
+### Get a list of tumblr posts already cross-posted to bluesky 
 def get_already_posted_links(client, handle, limit=20):
-    #Fetch recent Bluesky posts and extract URLs
+    # Get recent Bluesky posts and extract URLs
     feed_response = client.get_author_feed(actor=handle, limit=limit)
     already_posted_links = set()
 
@@ -63,7 +62,7 @@ title = html_cleaner(latest.title)
 link = latest.link
 
 # Get recent Bluesky posts
-already_posted_links = get_already_posted_links(client, BSKY_HANDLE, limit=20)
+already_posted_links = get_already_posted_links(client, BSKY_HANDLE, limit=5)
 
 if link not in already_posted_links:
     post_text = f"Update from Tumblr: {title}\n{link}"
@@ -81,7 +80,7 @@ if link not in already_posted_links:
                     image=upload.blob,
                     alt=f"Image from {title}"
                 ))
-            except Exception as e:
+            except Exception as error:
                 print(f"Failed to upload image {url}: {e}")
 
         embed = models.AppBskyEmbedImages.Main(images=images)
@@ -89,6 +88,4 @@ if link not in already_posted_links:
     else:
         client.send_post(post_text)
 
-    print("Posted to Bluesky")
-else:
-    print("Already cross-posted.")
+
