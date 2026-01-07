@@ -83,12 +83,13 @@ if link not in already_posted_links:
                     alt=f"Image from {title}"
                 ))
             except Exception as error:
-                print(f"Failed to upload image {url}: {e}")
+                print(f"Failed to upload image {url}: {error}")
 
         embed = models.AppBskyEmbedImages.Main(images=images)
         client.send_post(text=post_text, embed=embed)
     else:
         client.send_post(post_text)
+
 
 
 
