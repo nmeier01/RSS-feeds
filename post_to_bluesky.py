@@ -58,14 +58,19 @@ client = Client()
 client.login(BSKY_HANDLE, BSKY_APP_PASSWORD)
 
 latest = feed.entries[0]
+
 title = html_cleaner(latest.title)
+title = safe_truncate(title, 260)  # leave room for link
+
 link = latest.link
+link_text = "Read more"
+
 
 # Get recent Bluesky posts
 already_posted_links = get_already_posted_links(client, BSKY_HANDLE, limit=5)
 
 if link not in already_posted_links:
-    post_text = f"Update from Tumblr: {title}\n{link}"
+    post_text = f"Update from Tumblr: {title}\n\n{link_text}"
 
     image_urls = extract_images(latest)
 
@@ -87,5 +92,6 @@ if link not in already_posted_links:
         client.send_post(text=post_text, embed=embed)
     else:
         client.send_post(post_text)
+
 
 
