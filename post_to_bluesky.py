@@ -67,7 +67,7 @@ link = latest.link
 already_posted_links = get_already_posted_links(client, BSKY_HANDLE, limit=5)
 
 if link not in already_posted_links:
-    post_text = f"Update from Tumblr: {title}\n{link}"
+    post_text = f"Update from Tumblr: {title}\nClick directly on the link in our Bluesky description, or copy and paste the below:\n{link}"
 
     image_urls = extract_images(latest)
 
@@ -89,6 +89,7 @@ if link not in already_posted_links:
         client.send_post(text=post_text, embed=embed)
     else:
         client.send_post(post_text)
+
 
 
 
